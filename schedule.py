@@ -1,8 +1,9 @@
 import pandas as pd
 import itertools
-# add length column
+# to do/notes:
+# automatically add length column
 # assume longest possible class is 6 hours and no class goes past midnight!
-# let user either enter a filename fro which we can obtain a dataframe, or manually enter class names, times, days, start times
+# maybe allow user to manually enter class names, times, days, start times
 # add some kind of undo functionality, also add save last settings functionality
 def time_to_int(time):
     res = ""
@@ -95,7 +96,6 @@ def schedule_good(schedule):
         i += 1
     return True
 
-#min_max_exact can be "Min" or "Max" "Exactly" or "MAX"
 # n is a number
 # credits is True if you want to restrict number of credits instead of number of classes
 # times_deps_names is "Start hour" or "Department" or "Name" or "Days"
