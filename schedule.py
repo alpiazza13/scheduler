@@ -153,24 +153,56 @@ def possible_schedules(data, number_of_classes, restrictions):
 def main():
     still_playing = True
     while still_playing:
-        spreadsheet = input("Type the name of an excel file with your class information.\nRequired columns:\nName\nTime (in this exact format: 8:50-10:10)\nDays (formatted like: MWF)\nStart (AM if class starts before noon, else PM)\Other suggested columns:\nCredits\nDepartment\n***NOTE: EVERYTHING IS CASE SENSITIVE!***\n")
+        spreadsheet = input("Type the name of an excel file with your class information.\nRequired columns:\nName\nTime (in this exact format: 8:50-10:10)\nDays (suggested formatting: MWF)\nStart (AM if class starts before noon, else PM)\nOther suggested columns:\nCredits\nDepartment\nYou can also have any other columns you'd like - you'll be able to restrict your outputted schedules by any column in your spreadsheet.\n***NOTE: EVERYTHING IS CASE SENSITIVE!***\n")
+        # use a try/except here
+        # use inital_errors here just as you used errors below
+        df = pd.read_excel(spreadsheet)
+        # also try/except here I'd say
         number_of_classes = int(input("How many classes would you like to take?  "))
         adding_restrictions = True
         restrictions = []
         while adding_restrictions:
             yes_no = input("Would you like to add any more restrictions? Yes or No: ")
+            errors = []
             if yes_no == "No":
                 adding_restrictions = False
             elif yes_no == "Yes":
-                to_restrict = input("What class characteristic what would you like to restrict by?\nOptions: Start hour, or any column name in your excel file. Useful choices include: Department, Name, Day, Time, Start hour:  ")
+                print("If you mess up, just keep going - you'll have the option to confirm or delete your restriction at the end.")
+                # add pause here?
+                to_restrict = input("What class characteristic what would you like to restrict by?\nOptions: Start hour, or any column name in your excel file. Useful choices (if they exist in your spreadsheet) include: Department, Name, Days:  ")
+                if to_restrict not in df.columns and to_restrict not in ["Start hour"]:
+                    errors.append(f"{to_restrict} is not a valid class characteristic. The class characteristic must be either a column in your spreadsheet or 'Start hour'.")
                 print(f"Your restriction will be of the form:\n My schedule will have (A)(at most/at least/exactly) (B)(N) (C)(classes/credits) which have {to_restrict} as one of the following: (D)(list of {to_restrict}s)")
                 min_max = input("Enter your response for (A): type 1 for at most, 2 for at least, 3 for exactly:  ")
-                n = int(input("Enter your response for (B) (ex: 2)  "))
+                if min_max not in ["1", "2", "3"]:
+                    errors.append("Your input for (A) was invalid. You must enter 1,2, or 3.")
+                n_str = input("Enter your response for (B) (ex: 2)  ")
+                try:
+                    n = int(n_str)
+                except:
+                    errors.append("Your input for (B) was invalid. You must enter a number.")
                 classes_credits = input("Enter your response for (C) - 1 for credits, 2 for classes -  ")
+                if classes_credits not in ["1", "2"]:
+                    errors.append("Your input for (C) was invalid. You must enter 1 or 2.")
                 credits = (classes_credits == "1")
-                froms_input = input(f"Enter a list of {to_restrict}s  in the following format: item1,item2,item3,item4 (separated by commas, no spaces)\nIf restricting by start hour, enter list items in military time.\n")
+                # not sure how to sanitize this input
+                froms_input = input(f"Enter a list of {to_restrict}s in the following format: item1,item2,item3,item4 (separated by commas, no spaces)\n(If restricting by start hour, enter list items in military time.)\n")
                 froms_list = froms_input.split(",")
-                restrictions.append([min_max, n, credits, to_restrict, froms_list])
+                if errors != []:
+                    print("You made at least one mistake. Your mistakes were:")
+                    print("\n".join(errors))
+                    # add pause here
+                    "The restriction you just created won't be taken into account - try again!"
+                    # and/or here
+                else:
+                    # finish this
+                    print("Here is the restriction you just created: need to complete this")
+                    inp1 = input("Do you want this restriction to be applied when generating your possible schedules? Yes or No?  ")
+                    if inp1 == "Yes":
+                        restrictions.append([min_max, n, credits, to_restrict, froms_list])
+                    else:
+                        print("Ok, this restriction will be deleted!")
+                        # pause here maybe
             else:
                 print("Try again - make sure to type either Yes or No.")
         print("Ok, here come your schedules!")
