@@ -1,2 +1,2 @@
-# scheduler
-Main user input is the file name of an excel spreadsheet with time/day info on a number of classes and returns the possible schedules that can be made from those classes. Currently just a command line implementation. Allows user to input how many classes they'd like to take and any amount of restrictions which can be based on any column in their spreadsheet. Included in this repository are two example spreadsheets of classes.
+# Scheduler
+Main user input is the file name of an excel spreadsheet with time/day info on a number of classes. Returns the possible schedules that can be made from those classes. Currently just a command line implementation. Allows user to input how many classes they'd like to take and any amount of restrictions which can be based on any column in their spreadsheet. Included in this repository are two example spreadsheets with classes for testing.
